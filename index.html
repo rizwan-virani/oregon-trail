@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Oregon Trail: Unbroken</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ============ TITLE ============ -->
+  <section class="screen active" id="screen-title">
+    <div class="title-wrap">
+      <div class="title-sun"></div>
+      <h1 class="game-title">OREGON TRAIL<span class="title-sub">UNBROKEN</span></h1>
+      <p class="tagline">2,000 miles. 13 landmarks. One wagon.<br>Most parties don't make it. Be the ones that do.</p>
+      <div class="title-buttons">
+        <button class="btn btn-primary btn-big" data-action="new-game">START THE JOURNEY</button>
+        <button class="btn" data-action="continue-game" id="btnContinue">CONTINUE</button>
+        <button class="btn btn-ghost" data-action="show-help">HOW TO PLAY</button>
+        <button class="btn btn-ghost" data-action="show-hall">HALL OF LEGENDS</button>
+      </div>
+      <p class="credit-line">A wagon-train survival game &middot; keyboard + mouse &middot; best on desktop</p>
+    </div>
+  </section>
+
+  <!-- ============ HELP ============ -->
+  <section class="screen" id="screen-help">
+    <div class="panel panel-wide">
+      <h2 class="panel-title">HOW TO PLAY</h2>
+      <div class="help-grid">
+        <div class="help-card">
+          <h3>🎯 The Goal</h3>
+          <p>Get your wagon and your five people from Independence, Missouri to the Willamette Valley in Oregon &mdash; about 2,000 miles across 13 legs of trail. Winter is coming behind you. Move too slow and it catches you.</p>
+        </div>
+        <div class="help-card">
+          <h3>🧭 The Loop</h3>
+          <p>Each leg you <b>travel</b> (days tick by, food burns), hit <b>random events</b> where your choice matters, then face an <b>arcade challenge</b> at the landmark. Forts let you <b>trade and upgrade</b>.</p>
+        </div>
+        <div class="help-card">
+          <h3>⚔️ Bosses</h3>
+          <p>Five legs end in a real fight: the Kearny bandit gang, a grizzly at Laramie, the South Pass blizzard, a wolf pack near Fort Hall, and the Columbia River rapids. They hit hard. Upgrade first.</p>
+        </div>
+        <div class="help-card">
+          <h3>🎮 Controls</h3>
+          <p><b>Shooting:</b> mouse to aim, click or <span class="key">Space</span> to fire, <span class="key">R</span> to reload.<br>
+             <b>Steering:</b> <span class="key">←</span> <span class="key">→</span> or <span class="key">A</span> <span class="key">D</span>.<br>
+             <b>Everything else:</b> click.</p>
+        </div>
+        <div class="help-card">
+          <h3>🍖 Staying Alive</h3>
+          <p>Food feeds people. Ammo feeds the hunt. Parts fix the wagon. Medicine fixes people. Run out of any one of them and the trail starts taking things from you.</p>
+        </div>
+        <div class="help-card">
+          <h3>💀 Death Is Real</h3>
+          <p>People get sick, break bones, drown, and starve. You can finish this game with two survivors, or none. Everyone who makes it earns you points.</p>
+        </div>
+      </div>
+      <div class="panel-actions">
+        <button class="btn btn-primary" data-action="back-title">GOT IT</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ HALL OF LEGENDS ============ -->
+  <section class="screen" id="screen-hall">
+    <div class="panel">
+      <h2 class="panel-title">HALL OF LEGENDS</h2>
+      <div id="hallList" class="hall-list"></div>
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-action="clear-hall">CLEAR RECORDS</button>
+        <button class="btn btn-primary" data-action="back-title">BACK</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CHOOSE CLASS ============ -->
+  <section class="screen" id="screen-class">
+    <div class="panel panel-wide">
+      <h2 class="panel-title">WHO ARE YOU?</h2>
+      <p class="panel-sub">Your trade decides your money and your edge. Pick carefully &mdash; you're stuck with it for 2,000 miles.</p>
+      <div class="class-grid" id="classGrid"></div>
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-action="back-title">BACK</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NAME PARTY ============ -->
+  <section class="screen" id="screen-party">
+    <div class="panel">
+      <h2 class="panel-title">YOUR PARTY</h2>
+      <p class="panel-sub">Five names. The first one is you. Everyone else is depending on you.</p>
+      <div class="party-inputs" id="partyInputs"></div>
+      <div class="panel-actions">
+        <button class="btn btn-ghost" data-action="reroll-names">🎲 RANDOM NAMES</button>
+        <button class="btn btn-primary" data-action="party-done">TO THE OUTFITTER →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SHOP / OUTFITTER ============ -->
+  <section class="screen" id="screen-shop">
+    <div class="panel panel-wide">
+      <h2 class="panel-title" id="shopTitle">MATT'S GENERAL STORE</h2>
+      <p class="panel-sub" id="shopSub"></p>
+      <div class="shop-layout">
+        <div class="shop-main">
+          <div class="shop-tabs">
+            <button class="tab active" data-tab="supplies">SUPPLIES</button>
+            <button class="tab" data-tab="upgrades">GEAR &amp; UPGRADES</button>
+          </div>
+          <div id="shopItems" class="shop-items"></div>
+        </div>
+        <aside class="shop-side">
+          <div class="wallet">
+            <span class="wallet-label">PURSE</span>
+            <span class="wallet-amt" id="shopMoney">$0</span>
+          </div>
+          <div id="shopCart" class="cart-summary"></div>
+          <button class="btn btn-primary btn-block" data-action="leave-shop" id="btnLeaveShop">HIT THE TRAIL →</button>
+          <p class="shop-hint">Tip: food is life, but a broken wagon strands you. Balance both.</p>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRAIL / TRAVEL ============ -->
+  <section class="screen" id="screen-trail">
+    <div class="trail-wrap">
+      <header class="hud" id="hud"></header>
+      <div class="trail-stage">
+        <canvas id="trailCanvas" width="960" height="300"></canvas>
+        <div class="trail-banner" id="trailBanner"></div>
+      </div>
+      <div class="trail-bottom">
+        <div class="leg-info">
+          <div class="leg-name" id="legName">The Trail</div>
+          <div class="progress-track">
+            <div class="progress-fill" id="legProgress"></div>
+            <div class="progress-flag" id="legFlag">🏳️</div>
+          </div>
+          <div class="leg-miles" id="legMiles">0 / 0 miles</div>
+        </div>
+        <div class="trail-controls">
+          <div class="control-group">
+            <label>PACE</label>
+            <div class="seg" id="paceSeg"></div>
+          </div>
+          <div class="control-group">
+            <label>RATIONS</label>
+            <div class="seg" id="rationSeg"></div>
+          </div>
+          <button class="btn btn-primary btn-travel" data-action="toggle-travel" id="btnTravel">▶ TRAVEL</button>
+          <button class="btn btn-ghost btn-sm" data-action="rest">🔥 REST A DAY</button>
+          <button class="btn btn-ghost btn-sm" data-action="open-party">👥 PARTY</button>
+        </div>
+      </div>
+      <div class="log" id="trailLog"></div>
+    </div>
+  </section>
+
+  <!-- ============ EVENT MODAL ============ -->
+  <div class="modal-back" id="eventModal">
+    <div class="modal event-modal">
+      <div class="event-icon" id="eventIcon">⚠️</div>
+      <h2 class="event-title" id="eventTitle"></h2>
+      <p class="event-text" id="eventText"></p>
+      <div class="event-choices" id="eventChoices"></div>
+      <div class="event-result" id="eventResult"></div>
+    </div>
+  </div>
+
+  <!-- ============ PARTY MODAL ============ -->
+  <div class="modal-back" id="partyModal">
+    <div class="modal">
+      <h2 class="panel-title">THE PARTY</h2>
+      <div id="partyStatus" class="party-status"></div>
+      <div class="panel-actions">
+        <button class="btn btn-primary" data-action="close-party">CLOSE</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MINIGAME ============ -->
+  <section class="screen" id="screen-game">
+    <div class="mg-wrap">
+      <div class="mg-header">
+        <h2 class="mg-title" id="mgTitle">CHALLENGE</h2>
+        <div class="mg-stats" id="mgStats"></div>
+      </div>
+      <div class="mg-stage">
+        <canvas id="mgCanvas" width="960" height="480"></canvas>
+        <div class="mg-overlay" id="mgOverlay"></div>
+      </div>
+      <div class="mg-footer" id="mgFooter"></div>
+    </div>
+  </section>
+
+  <!-- ============ END ============ -->
+  <section class="screen" id="screen-end">
+    <div class="panel">
+      <div class="end-art" id="endArt"></div>
+      <h2 class="panel-title" id="endTitle"></h2>
+      <p class="end-text" id="endText"></p>
+      <div id="endScore" class="score-sheet"></div>
+      <div class="panel-actions">
+        <button class="btn btn-primary" data-action="new-game">RIDE AGAIN</button>
+        <button class="btn btn-ghost" data-action="back-title">TITLE SCREEN</button>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/minigames.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/game.js"></script>
+</body>
+</html>
